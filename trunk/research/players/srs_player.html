@@ -16,34 +16,13 @@
     <div class="navbar-inner">
         <div class="container">
             <a id="srs_index" class="brand" href="#">SRS</a>
-            <div class="nav-collapse collapse">
-                <ul class="nav">
-                    <li class="active"><a id="nav_srs_player" href="srs_player.html">SRS播放器</a></li>
-                    <li><a id="nav_rtc_player" href="rtc_player.html">RTC播放器</a></li>
-                    <li><a id="nav_rtc_publisher" href="rtc_publisher.html">RTC推流</a></li>
-                    <li><a  href="http://ossrs.net/srs.release/releases/app.html">iOS/Andriod</a></li>
-                    <!--<li><a id="nav_srs_publisher" href="srs_publisher.html">SRS编码器</a></li>-->
-                    <!--<li><a id="nav_srs_chat" href="srs_chat.html">SRS会议</a></li>-->
-                    <!--<li><a id="nav_srs_bwt" href="srs_bwt.html">SRS测网速</a></li>-->
-                    <!--li><a id="nav_vlc" href="vlc.html">VLC播放器</a></li>-->
-                    <!--<li><a id="nav_gb28181" href="srs_gb28181.html">GB28181</a></li>-->
-                    <li>
-                        <a href="https://github.com/ossrs/srs">
-                            <img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/ossrs/srs?style=social">
-                        </a>
-                    </li>
-                </ul>
-            </div>
         </div>
     </div>
 </div>
 <div class="container">
 
     <div id="main_content">
-        <div id="main_info" class="alert alert-info fade in">
-            <button type="button" class="close" data-dismiss="alert">×</button>
-            <strong><span>Usage:</span></strong> <span>输入HTTP-FLV/HLS地址后点击“播放视频”即可播放视频</span>
-        </div>
+        
         <div class="form-inline">
             <div>
                 URL:
@@ -52,7 +31,7 @@
             </div>
             <p></p>
             <div>
-                <video id="video_player" width="100%" autoplay controls></video>
+                <video id="video_player" width="100%" autoplay controls fullscreen></video>
                 <audio id="audio_player" width="100%" autoplay controls></audio>
             </div>
             <p>
@@ -70,25 +49,6 @@
                     </ul>
                 </p>
             </div>
-        </div>
-    </div>
-
-    <div name="detect_flash">
-        <div id="main_flash_alert" class="alert alert-danger fade in hide">
-            <button type="button" class="close" data-dismiss="alert">×</button>
-            <p>
-                <a href="https://www.adobe.com/products/flashplayer/end-of-life.html" target="_blank">Flash已死</a>，
-                无法播放RTMP流，可用ffplay或VLC播放器播放。
-            </p>
-            <ul>
-                <li>若希望做低延迟直播（3-5秒），可用HTTP-FLV，播放器用<a href="https://github.com/xqq/mpegts.js">flv.js</a>，H5/MSE播放HTTP-FLV</li>
-                <li>若希望做低延迟直播（3-5秒），可用HTTP-TS，播放器用<a href="https://github.com/xqq/mpegts.js">mpegts.js</a>，H5/MSE播放HTTP-TS</li>
-                <li>若对延迟不敏感（5-10秒），跨平台比较好，可用HLS，播放器用<a href="https://github.com/video-dev/hls.js/">hls.js</a>，H5/MSE播放HLS</li>
-                <li>若希望超低延迟（1秒内），只需要支持主流的浏览器，可用WebRTC，播放器用<a href="rtc_player.html">RTC播放器</a></li>
-            </ul>
-            <p>
-                更多信息，参考<a href="https://mp.weixin.qq.com/s/oYn5q4fF9afaged23Ueudg" target="_blank">没有Flash如何做直播？</a>
-            </p>
         </div>
     </div>
 
@@ -262,7 +222,7 @@
 
             show_for_video_ok();
 
-            flvPlayer = mpegts.createPlayer({type: 'flv', url: r.url, isLive: true});
+            flvPlayer = mpegts.createPlayer({type: 'flv', url: 'http://172.16.6.22:8080/live/livestream.flv', isLive: true});
             flvPlayer.attachMediaElement(document.getElementById('video_player'));
             flvPlayer.load();
             flvPlayer.play();
@@ -277,6 +237,11 @@
     $("#txt_url").change(function(){
         apply_url_change();
     });
+    
+    $('#video_player').prop('muted', false);
+    $('#audio_player').prop('muted', false);
+    var r = apply_url_change();
+    start_play(r);
 
     $("#btn_play").click(function(){
         $('#video_player').prop('muted', false);
